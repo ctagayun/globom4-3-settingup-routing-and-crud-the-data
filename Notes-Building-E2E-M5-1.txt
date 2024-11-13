@@ -1,0 +1,271 @@
+
+Link to PS: https://app.pluralsight.com/ilx/video-courses/fbbac3b2-0e56-464b-92f2-0b877f92f12c/7c99c5ed-967e-43f7-aa55-7cbca139b289/38c3e054-9e72-4047-8789-b873c833c56a
+
+download and install .net 8.osdk, VScode, LTS NOde (nodejs.org)
+
+1. Setting up the completed project
+   clone this repo https://github.com/rolandguijt/ps-globomantics-webapi-react
+
+    - click clone repository  (completed project)
+    - this React Project is using Vite 
+
+    - after cloning do: 
+        dotnet tool install --global dotnet-ef
+        cd api project
+        dotnet ef database update 
+        run the api 
+        - dotnet run 
+
+        cd to ReactWeb project 
+        - npm install 
+
+     - run the project: npm run dev 
+
+   open VSCode --> Clone repository
+
+   next do: dotnet tool install --global dotnet-ef
+
+   next cd React Web - run dotnet ef database update
+
+   next cd api -- do dotnet run
+
+   nect cd ReactWeb -- npm run dev 
+
+2. Building the React app from scratch
+
+    - see https://app.pluralsight.com/ilx/video-courses/fbbac3b2-0e56-464b-92f2-0b877f92f12c/7c99c5ed-967e-43f7-aa55-7cbca139b289/9f92a0f1-17b4-469f-95d8-624f5adb9542
+    
+    - create react app from scratch 
+        npm create vite@5
+        when prompted enter ReactWeb as project name 
+
+    - npm install    
+    - npm install bootstrap@5
+
+    - import "bootstrap/dist/css/bootstrap.min.css"  in main.tsx
+
+    - add css code to src/main/app.css
+
+    - then create "main" folder and move App.tsx and App.css to this folder
+      and then create Header.tsx and import logo iamge and create a 
+      function component
+
+    - next modify the App.tsx. Copy code from ReactWeb in the completed project
+
+    - modify the port Vite is running from:
+        vite.config --> plugins and the following code:
+          server:{
+           port: 3000,
+           strictPort: true,
+          }   
+
+3. Creating the initial API Application: 
+     https://app.pluralsight.com/ilx/video-courses/fbbac3b2-0e56-464b-92f2-0b877f92f12c/7c99c5ed-967e-43f7-aa55-7cbca139b289/f9528f23-035f-4d5e-96c2-ccf6b66e3fcd
+  
+     - create directory called API in the root of the project
+
+     - cd API 
+
+     - dotnet new webapi -minimal
+
+     - this API doesn't use controller. basically the whole API is 
+       written in program.cs
+
+     - modify launchsettings.json to have the below code (see tutorial)
+         "Api": {
+          "commandName": "Project",
+          "dotnetRunMessages": true,
+          "launchBrowser": true,
+          "launchUrl": "swagger",
+          "applicationUrl": "https://localhost:4000",
+          "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+          }
+        },
+     - run the API using this command: dotnet run
+       add swagger to https://localhost:4000/swagger
+
+4. Running and Debugging: 
+    - https://app.pluralsight.com/ilx/video-courses/fbbac3b2-0e56-464b-92f2-0b877f92f12c/7c99c5ed-967e-43f7-aa55-7cbca139b289/ac2cbc02-448b-4bdb-9f6c-658f30cbf042
+
+Module 3: Getting and Displaying Data 
+    1. API: Creating Database
+        https://app.pluralsight.com/ilx/video-courses/fbbac3b2-0e56-464b-92f2-0b877f92f12c/6feac58d-c6dc-40ae-afd9-6358f0bf8bc1/b27964d1-1cdb-40c2-a518-1421030ca4c8
+      
+        -  dotnet add package Microsoft.EntityFrameworkCore.Sqlite (Sqlite works on many platform)
+
+        - create folder in api/data --> 
+            create file HouseEntity.cs and paste code.
+            create HouseDbContext : DbContext
+            create a class called SeedData.cs (dont copy Bid entity yet)
+
+        - next create the initial migration like this:
+            - first install run:
+                dotnet add package Microsoft.EntityFrameworkCore.Design
+
+            - once install is finished create the Initial Migration
+                cd ../api folder and run "dotnet ef migrations add initial"
+
+                you should see: Build started... etc
+            - after successful migration, .netcore will create a folder called "api/Migration"
+
+        - to actually execute the instructions in ./migrations/20241026155228_initial
+          and create the database we need to run the following command:
+              dotnet ef database update
+
+    2. API: Adding Endpoints
+      - https://app.pluralsight.com/ilx/video-courses/fbbac3b2-0e56-464b-92f2-0b877f92f12c/6feac58d-c6dc-40ae-afd9-6358f0bf8bc1/923360fc-0172-4fda-9038-459c1f4e7db4
+
+      - go to program.cs and add endpoints (see comments)
+          - add the database context to the dependency injection ontainer
+
+          - now we can proceed changing the endpoints in program.cs
+
+          - when you run the API now, it will error out complaining that 
+            the HouseDbContext needs a constructor. Let's add a constructor
+
+          - do a dotnet run --> go to localhost:4000/houses 
+            (affix houses to the URL). You should get a list of houses
+
+    3. Separation of Concerns:
+        - create a folder called Dtos
+
+        - create HouseDto  under api/Dtos folder 
+
+        - create HouseRepository.cs folder api/data 
+
+        - then register HouseRepository in DI container in Program.cs then change the App.MapGet to:
+            app.MapGet("/houses", (IHouseRepository repo) => repo.GetAll()); 
+
+        -   do a dotnet run --> go to localhost:4000/houses 
+            (affix houses to the URL). You should get a list of houses
+
+    4. React Consuming Endpoints
+        - the next task is for ReactWeb to display list of houses coming from the API
+
+        - first we need a place to store DTO's needed by react. 
+            create a folder src/types and a DTO called house.ts
+
+        - next we need a file where to store the url of the API in react. Create 
+          a file called config.ts under src/config.ts
+
+        - create a folder src/house and file houseList.tsx. Put the code for the view here
+
+        - the final thing to do is to render the HouseList component in app.tsx
+
+        - before running the react go to api/program.cs and add  a call to AddCors on the 
+          service object and then plug a middleware that allow everything from localhost 
+              builder.Services.AddCors();
+              app.UseCors(p => p.WithOrigins("http://localhost:3000")
+                .AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+        - start API: dotnet run 
+        - start ReactWeb: npm run dev
+
+    5. React Custom Hooks and Rerender 
+        - prevent re-render on fetch
+        - create a folder hooks and a file called HouseHooks and define a custom hook:
+              const useFetchHouses = (): House[] => {
+              const [houses, setHouses] = useState<House[]>
+                ([]);
+
+              const fetchHouses = async () => {
+                  const rsp = await fetch(`${config.baseApiUrl}/houses`);
+                  const houses = await rsp.json();  //deserialize to JSON
+                  setHouses(houses); //set the state after which the component will be re-rendered
+            };
+            fetchHouses();
+            return houses;
+            }
+          
+        - then go to HouseList and refactor to call useFetchHouses custom hook
+
+    6. React: Caching and Refetching with React Query and Using Axios
+      - https://app.pluralsight.com/ilx/video-courses/fbbac3b2-0e56-464b-92f2-0b877f92f12c/6feac58d-c6dc-40ae-afd9-6358f0bf8bc1/186797d5-0998-4f0f-be58-47b855a6e15e
+      - 
+      - This version aims to update the screen data by using
+        shared state, caching, controlled re-fetches and retries.
+        In addition this version of the app will prevent HouseList hook
+        to execute each time it is used. This can be accomplised using 
+        "React-Query"
+
+      - go to demo globom3-6-keep-screen-updated-by-using-axios-caching-and-react-query
+
+      - first npm install axios@1 - we will use this library instead of 
+        "fetch"
+  
+      - npm install @tanstack/react-query@5
+
+
+      - modify src/hooks/HouseHooks.ts to use useQuery and Axios
+
+      - after that modify src/house/houseList to call the new useFetchHouses
+
+      - we have one more thing we have to do. Go to src/main.tsx.
+        React Query relies on QueryClient object. we instantiate that
+        object and use a QueryClientProvider to make it available to all
+        child components.
+        
+      - Finally test it: 
+          - dotnet run on API project 
+          - npm run dev on Reactweb
+  
+    7. React Formatting Data and Displaying Status Information
+        - https://app.pluralsight.com/ilx/video-courses/fbbac3b2-0e56-464b-92f2-0b877f92f12c/6feac58d-c6dc-40ae-afd9-6358f0bf8bc1/61e864f4-7f6c-4f2c-ba15-2238c30d990d
+
+        - add currency formatter in reactweb/config.ts
+        - add currencyFormatter to src/house/houselist.tsx
+
+        - let's display status of API calls 
+          - create a component under src folder a name it apiStatus.tsx
+
+        - modify HouseList. Add code to display status
+
+Module 4: Adding Frontend Routing and Navigation
+
+    1. Adding API HouseDetails endpoint
+        - https://app.pluralsight.com/ilx/video-courses/fbbac3b2-0e56-464b-92f2-0b877f92f12c/8c582716-546d-4dbb-a88c-51541498ae9f/8f6e4491-e0e5-41e4-acfa-e16bc6d7b722
+
+        - create HouseDetailDTO in folder "DTO
+        
+        - next open HouseRepository.cs in ReactWeb/Data and add the following EP:
+
+            public async Task<List<HouseDto>> GetAll()  
+            public async Task<HouseDetailDto?> Get(int id)
+          
+            add the above methods in the IHouseRepository
+        
+        - next the add endpoints to Program.cs  (see detailed explanations)
+         
+    2. Setting up routing and React HouseDetailComponent
+        - https://app.pluralsight.com/ilx/video-courses/fbbac3b2-0e56-464b-92f2-0b877f92f12c/8c582716-546d-4dbb-a88c-51541498ae9f/b646b1f6-4c4d-4531-8095-bb9d0c56eb48
+
+        - install:
+            npm install react-router-dom@6
+
+        - modify src/main/App.tsx
+            - import BrowserRouter (see comments in App.tsx)
+
+        - setting up HouseDetailComponent
+            - https://app.pluralsight.com/ilx/video-courses/fbbac3b2-0e56-464b-92f2-0b877f92f12c/8c582716-546d-4dbb-a88c-51541498ae9f/9e176161-3009-4fb0-8478-7e3ed666d2fc
+
+            - add useFetchHouse() into src/hooks/house/HouseHooks.ts
+
+            - let's create the HouseDetailComponent: 
+                - add HouseDetail.tsx
+
+    3. Navigating from HouseList to HouseDetailComponent
+           - https://app.pluralsight.com/ilx/video-courses/fbbac3b2-0e56-464b-92f2-0b877f92f12c/8c582716-546d-4dbb-a88c-51541498ae9f/10f290ba-ceb4-47ea-ab2c-a45cfedd8c0c
+
+           - go to HouseListComponent and add:
+               const nav = useNavigate();
+
+      Notes on Navigation Using useNavigation:
+        - calling useNavigate is different than doing a redirect.
+        - the function will not create a request to the server
+        - it will use the internal routing system
+
+      Notes on Navigation Using redirect:
+        - a normal redirec using window location href, for example will 
+        load the entire application will be reloaded from the server after which the 
+        routing mechanism will determine the right component to dispaly
+       

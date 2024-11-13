@@ -1,0 +1,19 @@
+/* Add this copy it from the demo file in ReactWeb in the completed project*/
+.logo {
+  height: 150px;
+  cursor: pointer;
+}
+
+.subtitle {
+  font-style: italic;
+  font-size: x-large;
+  color: coral;
+}
+
+.themeFontColor {
+  color: coral;
+}
+
+tr {
+  cursor: pointer;
+}
