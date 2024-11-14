@@ -4,10 +4,9 @@ public interface IHouseRepository
 {
     Task<List<HouseDto>> GetAll();
     Task<HouseDetailDto?> Get(int id);
-    
-    //Task<HouseDetailDto> Add(HouseDetailDto house);
-    //Task<HouseDetailDto> Update(HouseDetailDto house);
-    //Task Delete(int id);
+    Task<HouseDetailDto> Add(HouseDetailDto house);
+    Task<HouseDetailDto> Update(HouseDetailDto house);
+    Task Delete(int id);
 }
 
 public class HouseRepository : IHouseRepository
@@ -19,6 +18,7 @@ public class HouseRepository : IHouseRepository
         return new HouseDetailDto(e.Id, e.Address, e.Country, e.Price,  e.Description, e.Photo);
     }
 
+    //*This private method will put the data from the dto into a new HouseEntity
     private static void DtoToEntity(HouseDetailDto dto, HouseEntity e)
     {
         e.Address = dto.Address;
@@ -60,9 +60,20 @@ public class HouseRepository : IHouseRepository
     //*Endpoint to add a House
     public async Task<HouseDetailDto> Add(HouseDetailDto dto)
     {
+        //*create a new entity
         var entity = new HouseEntity();
+        //*create a private method called DtoToEntity that will put the data from the DTO 
+        //*into the new entity
         DtoToEntity(dto, entity);
+
+        //*Note context.Entry(entity).State = EntityState.Modified is not needed in add
+        //*because the DBContext automatically starts tracking when a command 
+        //*line Add is executing.
+
+        //*Add house. This will be in-memory only
         context.Houses.Add(entity);
+
+        //*This will persist the new house (from in-memory) into the database
         await context.SaveChangesAsync();
         return EntityToDetailDto(entity);
     }
@@ -72,8 +83,15 @@ public class HouseRepository : IHouseRepository
         var entity = await context.Houses.FindAsync(dto.Id);
         if (entity == null)
             throw new ArgumentException($"Trying to update house: entity with ID {dto.Id} not found.");
+        
         DtoToEntity(dto, entity);
+
+        //*Since we turned off the EF tracking feature for performance reasons (see ???)
+        //*EF now has no idea that the entity is modified, so we have to tell EF that by 
+        //*using the following code: This was not done in ADD its because the DBContext automatically
+        //*starts tracking when a command line Add is executing.
         context.Entry(entity).State = EntityState.Modified;
+
         await context.SaveChangesAsync();
         return EntityToDetailDto(entity);
     }

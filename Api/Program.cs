@@ -76,7 +76,7 @@ app.MapGet("/house/{houseId:int}", async(int houseId,IHouseRepository repo) =>
      //*The first param by REST convention we return the URL and ID where the newly 
      //*created house can be found. The second param is the house as it was added to the 
      //*database
-     return Results.Created($"/houses/{newHouse.id}", newHouse);
+     return Results.Created($"/houses/{newHouse.Id}", newHouse);
      //*This is the metadata forSwagger has to be added again so that it knows 
      //*EP producess a 201
    }).ProducesProblem(404).Produces<HouseDetailDto>(StatusCodes.Status200OK);          

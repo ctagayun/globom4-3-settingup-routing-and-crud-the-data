@@ -275,5 +275,7 @@ Module 5: Creating, Updating and Deleting Data
 
      -  add add, delete, and update methods in api/program.cs 
 
-  2. API database persistencde
-     - go to ReactWeb/House/HouseRepository.cs and add ADD, PUT, DELETE methods
+  2. API database persistence 
+     - https://app.pluralsight.com/ilx/video-courses/fbbac3b2-0e56-464b-92f2-0b877f92f12c/8df0ce24-cefa-421a-9111-2ab738544221/4e83e69f-523e-43a9-8d9d-959856fa6061
+
+     - go to api/data/HouseRepository.cs and add ADD, PUT, DELETE methods
