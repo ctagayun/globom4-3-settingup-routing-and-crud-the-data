@@ -269,3 +269,11 @@ Module 4: Adding Frontend Routing and Navigation
         load the entire application will be reloaded from the server after which the 
         routing mechanism will determine the right component to dispaly
        
+Module 5: Creating, Updating and Deleting Data 
+  1. Api Create, Edit, and Delete EP
+     - https://app.pluralsight.com/ilx/video-courses/fbbac3b2-0e56-464b-92f2-0b877f92f12c/8df0ce24-cefa-421a-9111-2ab738544221/fd8dc738-13ae-4cf9-814e-29788116273e
+
+     -  add add, delete, and update methods in api/program.cs 
+
+  2. API database persistencde
+     - go to ReactWeb/House/HouseRepository.cs and add ADD, PUT, DELETE methods
